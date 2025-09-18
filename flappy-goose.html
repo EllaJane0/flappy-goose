@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Goose</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(to bottom, #87CEEB, #98FB98);
+            font-family: Arial, sans-serif;
+        }
+
+        .game-container {
+            text-align: center;
+            position: relative;
+        }
+
+        .title-screen {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .title {
+            font-size: 3em;
+            color: #2C5234;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .goose-emoji {
+            font-size: 4em;
+            margin: 20px 0;
+        }
+
+        .name-input {
+            padding: 15px;
+            font-size: 1.2em;
+            border: 2px solid #2C5234;
+            border-radius: 10px;
+            margin: 20px 0;
+            width: 250px;
+        }
+
+        .start-btn {
+            padding: 15px 30px;
+            font-size: 1.3em;
+            background: #2C5234;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .start-btn:hover {
+            background: #1a3020;
+        }
+
+        .game-screen {
+            display: none;
+        }
+
+        canvas {
+            border: 3px solid #2C5234;
+            border-radius: 10px;
+            background: linear-gradient(to bottom, #87CEEB, #98FB98);
+        }
+
+        .score {
+            font-size: 2em;
+            color: #2C5234;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .game-over {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .leaderboard {
+            display: none;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+        }
+
+        .leaderboard h2 {
+            color: #2C5234;
+            margin-bottom: 20px;
+        }
+
+        .leaderboard-entry {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .play-again-btn {
+            background: #2C5234;
+            color: white;
+        }
+
+        .leaderboard-btn {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .back-btn {
+            background: #666;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+
+        .instructions {
+            margin: 20px 0;
+            color: #666;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div id="titleScreen" class="title-screen">
+            <h1 class="title">Flappy Goose</h1>
+            <div class="goose-emoji">🪿</div>
+            <input type="text" id="playerName" class="name-input" placeholder="Enter your name" maxlength="20">
+            <div class="instructions">Press SPACE or click to flap!</div>
+            <button id="startBtn" class="start-btn">Start Game</button>
+            <button id="showLeaderboardBtn" class="btn leaderboard-btn">Leaderboard</button>
+        </div>
+
+        <div id="gameScreen" class="game-screen">
+            <div class="score">Score: <span id="currentScore">0</span></div>
+            <canvas id="gameCanvas" width="800" height="600"></canvas>
+        </div>
+
+        <div id="gameOver" class="game-over">
+            <h2>Game Over!</h2>
+            <div class="goose-emoji">🪿</div>
+            <p>Final Score: <span id="finalScore">0</span></p>
+            <p id="newRecord" style="color: #4CAF50; font-weight: bold; display: none;">New Personal Best!</p>
+            <button id="playAgainBtn" class="btn play-again-btn">Play Again</button>
+            <button id="viewLeaderboardBtn" class="btn leaderboard-btn">Leaderboard</button>
+        </div>
+
+        <div id="leaderboard" class="leaderboard">
+            <h2>🏆 Leaderboard 🏆</h2>
+            <div id="leaderboardList"></div>
+            <button id="backToMenuBtn" class="btn back-btn">Back to Menu</button>
+        </div>
+    </div>
+
+    <script>
+        class FlappyGoose {
+            constructor() {
+                this.canvas = document.getElementById('gameCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.gameRunning = false;
+                this.score = 0;
+                this.playerName = '';
+
+                this.goose = {
+                    x: 100,
+                    y: 300,
+                    width: 40,
+                    height: 40,
+                    velocity: 0,
+                    gravity: 0.5,
+                    jumpForce: -10
+                };
+
+                this.pipes = [];
+                this.pipeWidth = 80;
+                this.pipeGap = 200;
+                this.pipeSpeed = 3;
+
+                this.setupEventListeners();
+                this.loadLeaderboard();
+            }
+
+            setupEventListeners() {
+                document.getElementById('startBtn').addEventListener('click', () => this.startGame());
+                document.getElementById('playAgainBtn').addEventListener('click', () => this.restartGame());
+                document.getElementById('viewLeaderboardBtn').addEventListener('click', () => this.showLeaderboard());
+                document.getElementById('showLeaderboardBtn').addEventListener('click', () => this.showLeaderboard());
+                document.getElementById('backToMenuBtn').addEventListener('click', () => this.showTitleScreen());
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                        if (this.gameRunning) {
+                            this.flap();
+                        }
+                    }
+                });
+
+                this.canvas.addEventListener('click', () => {
+                    if (this.gameRunning) {
+                        this.flap();
+                    }
+                });
+            }
+
+            startGame() {
+                const nameInput = document.getElementById('playerName');
+                this.playerName = nameInput.value.trim() || 'Anonymous';
+
+                document.getElementById('titleScreen').style.display = 'none';
+                document.getElementById('gameScreen').style.display = 'block';
+                document.getElementById('gameOver').style.display = 'none';
+                document.getElementById('leaderboard').style.display = 'none';
+
+                this.resetGame();
+                this.gameRunning = true;
+                this.gameLoop();
+            }
+
+            resetGame() {
+                this.score = 0;
+                this.goose.y = 300;
+                this.goose.velocity = 0;
+                this.pipes = [];
+                this.updateScore();
+            }
+
+            restartGame() {
+                this.startGame();
+            }
+
+            flap() {
+                this.goose.velocity = this.goose.jumpForce;
+            }
+
+            update() {
+                this.goose.velocity += this.goose.gravity;
+                this.goose.y += this.goose.velocity;
+
+                if (this.goose.y < 0 || this.goose.y + this.goose.height > this.canvas.height) {
+                    this.gameOver();
+                    return;
+                }
+
+                if (this.pipes.length === 0 || this.pipes[this.pipes.length - 1].x < this.canvas.width - 300) {
+                    this.addPipe();
+                }
+
+                for (let i = this.pipes.length - 1; i >= 0; i--) {
+                    const pipe = this.pipes[i];
+                    pipe.x -= this.pipeSpeed;
+
+                    if (pipe.x + this.pipeWidth < 0) {
+                        this.pipes.splice(i, 1);
+                        continue;
+                    }
+
+                    if (!pipe.scored && pipe.x + this.pipeWidth < this.goose.x) {
+                        pipe.scored = true;
+                        this.score++;
+                        this.updateScore();
+                    }
+
+                    if (this.checkCollision(pipe)) {
+                        this.gameOver();
+                        return;
+                    }
+                }
+            }
+
+            addPipe() {
+                const minHeight = 50;
+                const maxHeight = this.canvas.height - this.pipeGap - minHeight;
+                const topHeight = Math.random() * (maxHeight - minHeight) + minHeight;
+
+                this.pipes.push({
+                    x: this.canvas.width,
+                    topHeight: topHeight,
+                    bottomY: topHeight + this.pipeGap,
+                    scored: false
+                });
+            }
+
+            checkCollision(pipe) {
+                const gooseLeft = this.goose.x;
+                const gooseRight = this.goose.x + this.goose.width;
+                const gooseTop = this.goose.y;
+                const gooseBottom = this.goose.y + this.goose.height;
+
+                const pipeLeft = pipe.x;
+                const pipeRight = pipe.x + this.pipeWidth;
+
+                if (gooseRight > pipeLeft && gooseLeft < pipeRight) {
+                    if (gooseTop < pipe.topHeight || gooseBottom > pipe.bottomY) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            draw() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                this.ctx.fillStyle = '#2C5234';
+                this.pipes.forEach(pipe => {
+                    this.ctx.fillRect(pipe.x, 0, this.pipeWidth, pipe.topHeight);
+                    this.ctx.fillRect(pipe.x, pipe.bottomY, this.pipeWidth, this.canvas.height - pipe.bottomY);
+                });
+
+                this.ctx.font = '30px Arial';
+                this.ctx.textAlign = 'center';
+                this.ctx.fillText('🪿', this.goose.x + this.goose.width/2, this.goose.y + this.goose.height/2 + 10);
+            }
+
+            updateScore() {
+                document.getElementById('currentScore').textContent = this.score;
+            }
+
+            gameOver() {
+                this.gameRunning = false;
+                document.getElementById('finalScore').textContent = this.score;
+
+                const isNewRecord = this.saveScore();
+                document.getElementById('newRecord').style.display = isNewRecord ? 'block' : 'none';
+
+                document.getElementById('gameOver').style.display = 'block';
+            }
+
+            gameLoop() {
+                if (this.gameRunning) {
+                    this.update();
+                    this.draw();
+                    requestAnimationFrame(() => this.gameLoop());
+                }
+            }
+
+            saveScore() {
+                let leaderboard = JSON.parse(localStorage.getItem('flappyGooseLeaderboard') || '[]');
+
+                const playerEntry = leaderboard.find(entry => entry.name === this.playerName);
+                let isNewRecord = false;
+
+                if (!playerEntry) {
+                    leaderboard.push({ name: this.playerName, score: this.score });
+                    isNewRecord = true;
+                } else if (this.score > playerEntry.score) {
+                    playerEntry.score = this.score;
+                    isNewRecord = true;
+                }
+
+                leaderboard.sort((a, b) => b.score - a.score);
+                leaderboard = leaderboard.slice(0, 10);
+
+                localStorage.setItem('flappyGooseLeaderboard', JSON.stringify(leaderboard));
+                return isNewRecord;
+            }
+
+            loadLeaderboard() {
+                const leaderboard = JSON.parse(localStorage.getItem('flappyGooseLeaderboard') || '[]');
+                const leaderboardList = document.getElementById('leaderboardList');
+
+                if (leaderboard.length === 0) {
+                    leaderboardList.innerHTML = '<p>No scores yet!</p>';
+                    return;
+                }
+
+                leaderboardList.innerHTML = leaderboard
+                    .map((entry, index) => `
+                        <div class="leaderboard-entry">
+                            <span>${index + 1}. ${entry.name}</span>
+                            <span>${entry.score}</span>
+                        </div>
+                    `).join('');
+            }
+
+            showLeaderboard() {
+                this.loadLeaderboard();
+                document.getElementById('titleScreen').style.display = 'none';
+                document.getElementById('gameScreen').style.display = 'none';
+                document.getElementById('gameOver').style.display = 'none';
+                document.getElementById('leaderboard').style.display = 'block';
+            }
+
+            showTitleScreen() {
+                document.getElementById('titleScreen').style.display = 'block';
+                document.getElementById('gameScreen').style.display = 'none';
+                document.getElementById('gameOver').style.display = 'none';
+                document.getElementById('leaderboard').style.display = 'block';
+            }
+        }
+
+        const game = new FlappyGoose();
+    </script>
+</body>
+</html>
