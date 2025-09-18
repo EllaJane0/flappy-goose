@@ -1,13 +1,8 @@
 {
-  "functions": {
-    "index.html": {
-      "memory": 128
-    }
-  },
   "rewrites": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "source": "/",
+      "destination": "/flappy-goose.html"
     }
   ]
 }
