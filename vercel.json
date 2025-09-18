@@ -1,13 +1,7 @@
 {
-  "rewrites": [
-    {
-      "source": "/",
-      "destination": "/flappy-goose.html"
-    }
-  ],
   "headers": [
     {
-      "source": "/flappy-goose.html",
+      "source": "/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -20,15 +14,6 @@
         {
           "key": "Expires",
           "value": "0"
-        }
-      ]
-    },
-    {
-      "source": "/",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache, no-store, must-revalidate"
         }
       ]
     }
