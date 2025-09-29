@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ella Moore - Product Manager & Leader</title>
+    <meta name="description" content="Ella Moore's portfolio - Product Manager, Technical Leader, and Community Builder. BYU graduate with experience in tech and dental staffing.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Cork Board Background and Base Styles */
+        :root {
+            --cork-bg: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAEAAQADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD');
+            --pin-shadow: 0 3px 6px rgba(139, 69, 19, 0.3);
+            --paper-white: #fefefe;
+            --text-dark: #2c2c2c;
+            --raspberry: #C1272D;
+            --navy: #1B365D;
+            --goldenrod: #DAA520;
+            --sage-green: #AEB86E;
+            --pin-color: #CD853F;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--cork-bg);
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .nav-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: var(--paper-white);
+            border-radius: 25px;
+            padding: 15px 30px;
+            box-shadow: var(--pin-shadow);
+            border: 2px solid #ddd;
+        }
+
+        .nav-pins {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-pin {
+            position: relative;
+            background: var(--paper-white);
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            font-weight: 500;
+            color: var(--text-dark);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-pin:before {
+            content: "";
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 12px;
+            background: var(--pin-color);
+            border-radius: 50%;
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .nav-pin:hover, .nav-pin.active {
+            background: var(--sage-green);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Page Container */
+        .page {
+            display: none;
+            padding: 120px 20px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Pinned Element Base Style */
+        .pinned-element {
+            position: relative;
+            background: var(--paper-white);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: var(--pin-shadow);
+            border: 1px solid #e0e0e0;
+            transform: rotate(0deg);
+            transition: all 0.3s ease;
+        }
+
+        .pinned-element:nth-child(even) {
+            transform: rotate(0.5deg);
+        }
+
+        .pinned-element:nth-child(odd) {
+            transform: rotate(-0.3deg);
+        }
+
+        .pinned-element:hover {
+            transform: rotate(0deg) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .pinned-element:before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            right: 30px;
+            width: 16px;
+            height: 16px;
+            background: var(--pin-color);
+            border-radius: 50%;
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        /* Button Styles */
+        .btn {
+            background: var(--raspberry);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-family: inherit;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: var(--navy);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(193, 39, 45, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--navy);
+            border: 2px solid var(--navy);
+        }
+
+        .btn-secondary:hover {
+            background: var(--navy);
+            color: white;
+        }
+
+        /* Grid Layouts */
+        .grid {
+            display: grid;
+            gap: 30px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                transform: none;
+                padding: 10px 15px;
+            }
+
+            .nav-pins {
+                gap: 10px;
+                justify-content: space-around;
+            }
+
+            .nav-pin {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
+
+            .page {
+                padding: 100px 15px 40px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .pinned-element {
+                padding: 20px;
+                margin: 15px 0;
+            }
+        }
+
+        /* Specific Page Styles */
+        .hero-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .profile-photo {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 30px;
+            display: block;
+            box-shadow: var(--pin-shadow);
+            border: 4px solid var(--paper-white);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .social-link {
+            color: var(--navy);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: var(--goldenrod);
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--navy);
+            color: white;
+        }
+
+        .skill-tag {
+            display: inline-block;
+            background: var(--sage-green);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            margin: 4px;
+            font-weight: 500;
+        }
+
+        .project-card {
+            border-left: 4px solid var(--raspberry);
+            padding-left: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--raspberry);
+        }
+
+        .resume-section {
+            margin-bottom: 30px;
+        }
+
+        .resume-item {
+            border-left: 3px solid var(--pin-color);
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        .date-range {
+            color: #666;
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav-container">
+        <div class="nav-pins">
+            <a href="#" class="nav-pin" data-page="home">Home</a>
+            <a href="#" class="nav-pin" data-page="about">About</a>
+            <a href="#" class="nav-pin" data-page="projects">Projects</a>
+            <a href="#" class="nav-pin" data-page="resume">Resume</a>
+            <a href="#" class="nav-pin" data-page="contact">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="home" class="page active">
+        <div class="hero-section">
+            <div class="pinned-element">
+                <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAH0AfQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9..." alt="Ella Moore" class="profile-photo">
+                <h1>Hi, I'm Ella Moore!</h1>
+                <p style="font-size: 1.2rem; margin-bottom: 20px;">Product Manager, Technical Leader, and Community Builder</p>
+                <p>Welcome to my digital scrapbook! I'm passionate about bringing people together through technology and creating products that make a difference.</p>
+                <div class="social-links">
+                    <a href="https://indigodentalstaffing.com" target="_blank" class="social-link">My Project</a>
+                    <a href="https://www.linkedin.com/in/ella-moore24" target="_blank" class="social-link">LinkedIn</a>
+                    <a href="#" class="social-link" data-page="resume">Resume</a>
+                    <a href="#" class="social-link" data-page="contact">Get in Touch</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-2">
+            <div class="pinned-element">
+                <h2>What I Do</h2>
+                <p>I'm a product manager who loves connecting technical capabilities with user needs. Currently wrapping up my degree at BYU while building real-world solutions.</p>
+                <ul style="margin-top: 15px; padding-left: 20px;">
+                    <li>Product Strategy & Management</li>
+                    <li>Technical Team Leadership</li>
+                    <li>Community Building & Events</li>
+                    <li>Full-Stack Development</li>
+                </ul>
+            </div>
+
+            <div class="pinned-element">
+                <h2>Current Highlights</h2>
+                <p><strong>President</strong> - BYU Product Management Association</p>
+                <p><strong>Co-President</strong> - BYU Women in Strategy</p>
+                <p><strong>Technical Founder</strong> - Indigo Dental Staffing</p>
+                <p><strong>Community Host</strong> - Scrapbook Club organizer</p>
+                <a href="#" class="btn" data-page="about" style="margin-top: 15px;">Learn More About Me</a>
+            </div>
+        </div>
+
+        <div class="pinned-element" style="text-align: center; margin-top: 40px;">
+            <h2>Ready to explore my work?</h2>
+            <p>Check out my projects, download my resume, or let's start a conversation!</p>
+            <div style="margin-top: 20px;">
+                <a href="#" class="btn" data-page="projects">View Projects</a>
+                <a href="#" class="btn btn-secondary" data-page="contact" style="margin-left: 15px;">Contact Me</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Page -->
+    <div id="about" class="page">
+        <div class="pinned-element">
+            <h1>About Me</h1>
+            <p style="font-size: 1.2rem;">Social, fun, leader, and great at hosting. That's me in a nutshell! I believe the best products come from understanding people and bringing teams together.</p>
+        </div>
+
+        <div class="grid grid-2">
+            <div class="pinned-element">
+                <h2>Leadership Experience</h2>
+                <div style="margin-bottom: 20px;">
+                    <h3>BYU Product Management Association - President</h3>
+                    <p>Leading a community of aspiring product managers, organizing events, and connecting students with industry professionals.</p>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <h3>BYU Women in Strategy - Co-President</h3>
+                    <p>Empowering women in business through strategic thinking workshops and networking opportunities.</p>
+                </div>
+                <div>
+                    <h3>Scrapbook Club Host</h3>
+                    <p>Building community through creative expression because who doesn't love preserving memories while making new ones?</p>
+                </div>
+            </div>
+
+            <div class="pinned-element">
+                <h2>Personality & Interests</h2>
+                <p>When I'm not managing products or leading teams, you'll find me:</p>
+                <ul style="margin: 15px 0; padding-left: 20px;">
+                    <li><strong>Foodie Adventures:</strong> Always hunting for great food and new restaurants</li>
+                    <li><strong>Mahjong Master:</strong> Strategy games are my jam</li>
+                    <li><strong>Space Enthusiast:</strong> Fascinated by the James Webb Space Telescope discoveries</li>
+                    <li><strong>Marketplace Hunter:</strong> Facebook Marketplace is my treasure hunting ground</li>
+                    <li><strong>Event Hosting:</strong> Creating spaces where people connect and have fun</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="pinned-element">
+            <h2>💼 My Approach</h2>
+            <p>I believe that great products are built by great teams, and great teams are built through genuine connection and shared purpose. My leadership style focuses on:</p>
+            <div class="grid grid-3" style="margin-top: 20px;">
+                <div>
+                    <h3>🤝 Collaboration</h3>
+                    <p>Building bridges between technical and business teams</p>
+                </div>
+                <div>
+                    <h3>🎯 User-Centricity</h3>
+                    <p>Always keeping the user experience at the heart of decisions</p>
+                </div>
+                <div>
+                    <h3>🚀 Innovation</h3>
+                    <p>Finding creative solutions to complex problems</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="pinned-element">
+            <h2>🎓 Skills & Expertise</h2>
+            <div style="margin-top: 20px;">
+                <span class="skill-tag">Product Management</span>
+                <span class="skill-tag">Strategic Planning</span>
+                <span class="skill-tag">Team Leadership</span>
+                <span class="skill-tag">User Research</span>
+                <span class="skill-tag">Data Analysis</span>
+                <span class="skill-tag">Full-Stack Development</span>
+                <span class="skill-tag">Community Building</span>
+                <span class="skill-tag">Event Planning</span>
+                <span class="skill-tag">Cross-functional Collaboration</span>
+                <span class="skill-tag">Agile Methodologies</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Projects Page -->
+    <div id="projects" class="page">
+        <div class="pinned-element">
+            <h1>My Projects</h1>
+            <p>Here's a showcase of my work - from technical builds to community initiatives.</p>
+        </div>
+
+        <div class="pinned-element project-card">
+            <h2>🦷 Indigo Dental Staffing Agency Website</h2>
+            <p style="font-style: italic; color: #666; margin-bottom: 15px;">Technical Founder & Full-Stack Developer</p>
+            <p>Built a comprehensive dental staffing platform that connects dental professionals with practices across the region. This project showcases my ability to translate business needs into technical solutions.</p>
+
+            <h3 style="margin-top: 25px;">Key Features:</h3>
+            <ul style="margin: 15px 0; padding-left: 20px;">
+                <li>Custom applicant tracking system</li>
+                <li>Automated matching algorithms</li>
+                <li>Integrated communication platform</li>
+                <li>Mobile-responsive design</li>
+                <li>SEO-optimized architecture</li>
+            </ul>
+
+            <h3>Technical Stack:</h3>
+            <div style="margin: 15px 0;">
+                <span class="skill-tag">React</span>
+                <span class="skill-tag">Node.js</span>
+                <span class="skill-tag">PostgreSQL</span>
+                <span class="skill-tag">AWS</span>
+                <span class="skill-tag">Stripe API</span>
+            </div>
+
+            <div style="margin-top: 25px;">
+                <a href="https://indigodentalstaffing.com" target="_blank" class="btn">Visit Live Site</a>
+                <span style="margin-left: 15px; color: #666;">🌐 indigodentalstaffing.com</span>
+            </div>
+        </div>
+
+        <div class="grid grid-2">
+            <div class="pinned-element">
+                <h2>📈 BYU Product Management Association</h2>
+                <p><strong>Role:</strong> President & Community Builder</p>
+                <p>Transformed the association from a small group into BYU's premier product management community with 200+ active members.</p>
+                <ul style="margin-top: 15px; padding-left: 20px;">
+                    <li>Organized industry speaker series</li>
+                    <li>Created mentorship programs</li>
+                    <li>Launched annual PM conference</li>
+                    <li>Built partnerships with tech companies</li>
+                </ul>
+            </div>
+
+            <div class="pinned-element">
+                <h2>👩‍💼 Women in Strategy Initiative</h2>
+                <p><strong>Role:</strong> Co-President & Program Developer</p>
+                <p>Co-led strategic initiatives to support women in business strategy roles, creating pathways for career advancement.</p>
+                <ul style="margin-top: 15px; padding-left: 20px;">
+                    <li>Strategic thinking workshops</li>
+                    <li>Industry networking events</li>
+                    <li>Mentorship matching program</li>
+                    <li>Career development resources</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="pinned-element">
+            <h2>🎨 Scrapbook Club & Community Events</h2>
+            <p><strong>Role:</strong> Host & Experience Designer</p>
+            <p>Created and host regular scrapbook club meetings that bring people together around creativity and memory-making. This project reflects my passion for community building and creating meaningful experiences.</p>
+            <div class="grid grid-3" style="margin-top: 20px;">
+                <div>
+                    <h3>Event Planning</h3>
+                    <p>Regular creative sessions with themed activities</p>
+                </div>
+                <div>
+                    <h3>Community Building</h3>
+                    <p>Fostering connections through shared creativity</p>
+                </div>
+                <div>
+                    <h3>Experience Design</h3>
+                    <p>Creating welcoming spaces for all skill levels</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="pinned-element" style="text-align: center;">
+            <h2>Want to see more or collaborate?</h2>
+            <p>I'm always working on new projects and looking for interesting challenges to tackle.</p>
+            <div style="margin-top: 20px;">
+                <a href="#" class="btn" data-page="contact">Let's Chat</a>
+                <a href="#" class="btn btn-secondary" data-page="resume" style="margin-left: 15px;">View My Resume</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resume Page -->
+    <div id="resume" class="page">
+        <div class="pinned-element" style="text-align: center;">
+            <h1>Resume</h1>
+            <p>Product Manager | Technical Leader | Community Builder</p>
+            <div style="margin-top: 20px;">
+                <button id="downloadResume" class="btn">📄 Download PDF Resume</button>
+            </div>
+        </div>
+
+        <div class="grid grid-2">
+            <div class="pinned-element">
+                <div class="resume-section">
+                    <h2>🎓 Education</h2>
+                    <div class="resume-item">
+                        <h3>Brigham Young University</h3>
+                        <p><strong>Bachelor's Degree</strong> (Graduating Soon)</p>
+                        <p class="date-range">Expected Graduation: 2024</p>
+                        <p>Focus on business strategy, product management, and entrepreneurship</p>
+                    </div>
+                </div>
+
+                <div class="resume-section">
+                    <h2>💼 Leadership Experience</h2>
+                    <div class="resume-item">
+                        <h3>President</h3>
+                        <p><strong>BYU Product Management Association</strong></p>
+                        <p class="date-range">2023 - Present</p>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Lead organization of 200+ members</li>
+                            <li>Organize industry events and speaker series</li>
+                            <li>Build partnerships with tech companies</li>
+                        </ul>
+                    </div>
+
+                    <div class="resume-item">
+                        <h3>Co-President</h3>
+                        <p><strong>BYU Women in Strategy</strong></p>
+                        <p class="date-range">2023 - Present</p>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Co-lead strategic initiatives for women in business</li>
+                            <li>Develop career advancement programs</li>
+                            <li>Create networking opportunities</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pinned-element">
+                <div class="resume-section">
+                    <h2>🚀 Technical Projects</h2>
+                    <div class="resume-item">
+                        <h3>Technical Founder</h3>
+                        <p><strong>Indigo Dental Staffing Agency</strong></p>
+                        <p class="date-range">2023 - Present</p>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Built full-stack web application from scratch</li>
+                            <li>Designed user experience and interface</li>
+                            <li>Implemented automated matching algorithms</li>
+                            <li>Managed technical architecture and deployment</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="resume-section">
+                    <h2>🛠 Technical Skills</h2>
+                    <div style="margin-top: 15px;">
+                        <p><strong>Languages:</strong> JavaScript, HTML, CSS, SQL</p>
+                        <p><strong>Frameworks:</strong> React, Node.js, Express</p>
+                        <p><strong>Databases:</strong> PostgreSQL, MongoDB</p>
+                        <p><strong>Tools:</strong> AWS, Git, Figma, Analytics</p>
+                        <p><strong>PM Tools:</strong> Jira, Notion, Slack, Zoom</p>
+                    </div>
+                </div>
+
+                <div class="resume-section">
+                    <h2>🌟 Key Strengths</h2>
+                    <ul style="margin-top: 15px; padding-left: 20px;">
+                        <li>Cross-functional team leadership</li>
+                        <li>Technical product strategy</li>
+                        <li>Community building & event hosting</li>
+                        <li>User experience design</li>
+                        <li>Data-driven decision making</li>
+                        <li>Stakeholder communication</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="pinned-element">
+            <h2>🎯 Career Objectives</h2>
+            <p>Seeking product management opportunities where I can leverage my technical background, leadership experience, and passion for community building to create products that bring people together and solve real problems.</p>
+            <div style="margin-top: 25px; text-align: center;">
+                <a href="#" class="btn" data-page="contact">Let's Connect</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Page -->
+    <div id="contact" class="page">
+        <div class="pinned-element">
+            <h1>Let's Connect!</h1>
+            <p>I'd love to hear from you! Whether you want to discuss product management, technical projects, or just chat about the latest James Webb Space Telescope discoveries.</p>
+        </div>
+
+        <div class="grid grid-2">
+            <div class="pinned-element">
+                <h2>📧 Send me a message</h2>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" name="subject" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="5" required placeholder="Tell me about your project, ask a question, or just say hi!"></textarea>
+                    </div>
+                    <button type="submit" class="btn">Send Message</button>
+                </form>
+            </div>
+
+            <div class="pinned-element">
+                <h2>🤝 Other ways to connect</h2>
+                <div style="margin-bottom: 20px;">
+                    <h3>📨 Direct Email</h3>
+                    <p><a href="mailto:isabellajanemoore@gmail.com" style="color: var(--accent-blue);">isabellajanemoore@gmail.com</a></p>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <h3>💼 Professional</h3>
+                    <p>Available for product management roles, consulting, or collaboration opportunities</p>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <h3>🎨 Community</h3>
+                    <p>Interested in joining Scrapbook Club or other community events? Drop me a line!</p>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <h3>🔗 Quick Links</h3>
+                    <div>
+                        <a href="https://indigodentalstaffing.com" target="_blank" class="social-link" style="display: inline-block; margin: 5px;">My Project</a>
+                        <a href="https://www.linkedin.com/in/ella-moore24" target="_blank" class="social-link" style="display: inline-block; margin: 5px;">LinkedIn</a>
+                        <a href="#" class="social-link" data-page="resume" style="display: inline-block; margin: 5px;">Resume</a>
+                    </div>
+                </div>
+
+                <div>
+                    <h3>⚡ Quick Facts</h3>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li>Based in Utah</li>
+                        <li>Available for remote work</li>
+                        <li>Always up for a good food recommendation</li>
+                        <li>Ready to discuss space discoveries anytime</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="pinned-element" style="text-align: center;">
+            <h2>🌟 Let's build something amazing together!</h2>
+            <p>Whether you're looking for a product manager, a technical collaborator, or just want to chat about the intersection of technology and community building.</p>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functionality
+        const navPins = document.querySelectorAll('.nav-pin');
+        const pages = document.querySelectorAll('.page');
+
+        function showPage(pageId) {
+            // Hide all pages
+            pages.forEach(page => page.classList.remove('active'));
+
+            // Show selected page
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+
+            // Update nav active state
+            navPins.forEach(pin => pin.classList.remove('active'));
+            const activePin = document.querySelector(`[data-page="${pageId}"]`);
+            if (activePin) {
+                activePin.classList.add('active');
+            }
+
+            // Update URL hash without triggering page reload
+            history.pushState({}, '', `#${pageId}`);
+        }
+
+        // Navigation click handlers
+        navPins.forEach(pin => {
+            pin.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = pin.getAttribute('data-page');
+                showPage(pageId);
+            });
+        });
+
+        // Handle all internal links with data-page attribute
+        document.addEventListener('click', (e) => {
+            if (e.target.hasAttribute('data-page')) {
+                e.preventDefault();
+                const pageId = e.target.getAttribute('data-page');
+                showPage(pageId);
+            }
+        });
+
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', () => {
+            const hash = window.location.hash.substring(1);
+            if (hash && document.getElementById(hash)) {
+                showPage(hash);
+            } else {
+                showPage('home');
+            }
+        });
+
+        // Initialize page based on URL hash
+        document.addEventListener('DOMContentLoaded', () => {
+            const hash = window.location.hash.substring(1);
+            if (hash && document.getElementById(hash)) {
+                showPage(hash);
+            } else {
+                showPage('home');
+            }
+        });
+
+        // Contact form functionality
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const name = formData.get('name');
+            const email = formData.get('email');
+            const subject = formData.get('subject');
+            const message = formData.get('message');
+
+            // Create mailto link
+            const mailtoLink = `mailto:isabellajanemoore@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`From: ${name} (${email})\n\n${message}`)}`;
+
+            // Open email client
+            window.location.href = mailtoLink;
+
+            // Show confirmation
+            alert('Thank you for your message! Your email client should open now. If it doesn\'t, please email me directly at isabellajanemoore@gmail.com');
+
+            // Reset form
+            this.reset();
+        });
+
+        // Resume download functionality
+        document.getElementById('downloadResume').addEventListener('click', function() {
+            // For now, we'll show an alert. In a real implementation, this would trigger a PDF download
+            alert('Resume download functionality would be implemented here. For now, please use the contact form to request my resume!');
+
+            // In a real implementation, you might do something like:
+            // const link = document.createElement('a');
+            // link.href = '/path/to/ella-moore-resume.pdf';
+            // link.download = 'Ella-Moore-Resume.pdf';
+            // link.click();
+        });
+
+        // Add some interactive animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add entrance animations to pinned elements
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = entry.target.style.transform.replace('translateY(20px)', 'translateY(0)');
+                    }
+                });
+            });
+
+            // Initially hide elements and add animation
+            document.querySelectorAll('.pinned-element').forEach(element => {
+                element.style.opacity = '0';
+                element.style.transform += ' translateY(20px)';
+                element.style.transition += ', opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(element);
+            });
+        });
+    </script>
+</body>
+</html>
