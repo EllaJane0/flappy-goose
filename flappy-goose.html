@@ -31,8 +31,35 @@
         .title {
             font-size: 3em;
             color: #2C5234;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .name-section {
+            margin: 20px 0;
+        }
+
+        .name-label {
+            display: block;
+            font-size: 1.1em;
+            color: #2C5234;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .game-preview {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(135, 206, 235, 0.2);
+            border-radius: 10px;
+            border: 2px dashed #2C5234;
         }
 
         .goose-emoji {
@@ -65,6 +92,18 @@
         }
 
         .game-screen {
+            display: none;
+        }
+
+        #homepage {
+            display: block;
+        }
+
+        #gameOver {
+            display: none;
+        }
+
+        #leaderboard {
             display: none;
         }
 
@@ -152,13 +191,21 @@
 </head>
 <body>
     <div class="game-container">
-        <div id="titleScreen" class="title-screen">
-            <h1 class="title">Flappy Goose</h1>
+        <!-- Updated homepage with name input - Sept 18, 2025 v2.0 -->
+        <div id="homepage" class="title-screen">
+            <h1 class="title">🪿 Flappy Goose 🪿</h1>
+            <div class="subtitle">Welcome to the ultimate goose flying adventure!</div>
             <div class="goose-emoji">🪿</div>
-            <input type="text" id="playerName" class="name-input" placeholder="Enter your name" maxlength="20">
-            <div class="instructions">Press SPACE or click to flap!</div>
-            <button id="startBtn" class="start-btn">Start Game</button>
-            <button id="showLeaderboardBtn" class="btn leaderboard-btn">Leaderboard</button>
+            <div class="name-section">
+                <label for="playerName" class="name-label">Enter your name:</label>
+                <input type="text" id="playerName" class="name-input" placeholder="Your name here..." maxlength="20">
+            </div>
+            <button id="enterGameBtn" class="start-btn">Start Adventure</button>
+            <button id="showLeaderboardBtn" class="btn leaderboard-btn">View Leaderboard</button>
+            <div class="game-preview">
+                <p class="instructions">🎮 Press SPACE or click to make the goose flap!</p>
+                <p class="instructions">🎯 Navigate through pipes to score points!</p>
+            </div>
         </div>
 
         <div id="gameScreen" class="game-screen">
@@ -197,25 +244,32 @@
                     width: 40,
                     height: 40,
                     velocity: 0,
-                    gravity: 0.5,
-                    jumpForce: -10
+                    gravity: 0.3,
+                    jumpForce: -8
                 };
 
                 this.pipes = [];
                 this.pipeWidth = 80;
-                this.pipeGap = 200;
-                this.pipeSpeed = 3;
+                this.pipeGap = 250;
+                this.pipeSpeed = 2;
 
                 this.setupEventListeners();
                 this.loadLeaderboard();
             }
 
             setupEventListeners() {
-                document.getElementById('startBtn').addEventListener('click', () => this.startGame());
+                document.getElementById('enterGameBtn').addEventListener('click', () => this.enterGame());
                 document.getElementById('playAgainBtn').addEventListener('click', () => this.restartGame());
                 document.getElementById('viewLeaderboardBtn').addEventListener('click', () => this.showLeaderboard());
                 document.getElementById('showLeaderboardBtn').addEventListener('click', () => this.showLeaderboard());
-                document.getElementById('backToMenuBtn').addEventListener('click', () => this.showTitleScreen());
+                document.getElementById('backToMenuBtn').addEventListener('click', () => this.showHomepage());
+
+                // Allow Enter key to start game from name input
+                document.getElementById('playerName').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.enterGame();
+                    }
+                });
 
                 document.addEventListener('keydown', (e) => {
                     if (e.code === 'Space') {
@@ -233,11 +287,22 @@
                 });
             }
 
-            startGame() {
+            enterGame() {
                 const nameInput = document.getElementById('playerName');
-                this.playerName = nameInput.value.trim() || 'Anonymous';
+                const name = nameInput.value.trim();
 
-                document.getElementById('titleScreen').style.display = 'none';
+                if (!name) {
+                    alert('Please enter your name to continue!');
+                    nameInput.focus();
+                    return;
+                }
+
+                this.playerName = name;
+                this.startGame();
+            }
+
+            startGame() {
+                document.getElementById('homepage').style.display = 'none';
                 document.getElementById('gameScreen').style.display = 'block';
                 document.getElementById('gameOver').style.display = 'none';
                 document.getElementById('leaderboard').style.display = 'none';
@@ -406,17 +471,17 @@
 
             showLeaderboard() {
                 this.loadLeaderboard();
-                document.getElementById('titleScreen').style.display = 'none';
+                document.getElementById('homepage').style.display = 'none';
                 document.getElementById('gameScreen').style.display = 'none';
                 document.getElementById('gameOver').style.display = 'none';
                 document.getElementById('leaderboard').style.display = 'block';
             }
 
-            showTitleScreen() {
-                document.getElementById('titleScreen').style.display = 'block';
+            showHomepage() {
+                document.getElementById('homepage').style.display = 'block';
                 document.getElementById('gameScreen').style.display = 'none';
                 document.getElementById('gameOver').style.display = 'none';
-                document.getElementById('leaderboard').style.display = 'block';
+                document.getElementById('leaderboard').style.display = 'none';
             }
         }
 
